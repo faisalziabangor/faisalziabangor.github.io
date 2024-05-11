@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VR Bar-chart with A-Frame and D3</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.1.0/d3.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <!-- Camera and Environment -->
+        <a-camera position="15 25 20"></a-camera>
+        <a-sky color="#ECECEC"></a-sky>
+
+        <!-- Container for Bars (to be generated dynamically) -->
+        <a-entity id="barsContainer"></a-entity>
+
+        <script>
+            // My JSON data
+            var jsonData = [
+                [5, 8, 12, 6, 15, 10, 9, 7, 11, 13],
+                [9, 11, 7, 14, 8, 5, 10, 12, 6, 13],
+                [12, 6, 9, 11, 8, 15, 7, 10, 13, 5],
+                [8, 10, 13, 7, 11, 6, 15, 9, 12, 4],
+                [7, 11, 9, 14, 8, 12, 6, 10, 13, 5],
+                [8, 10, 13, 7, 11, 6, 15, 9, 12, 5],
+                [1, 4, 9, 6, 15, 12, 6, 8, 13, 7],
+                [8, 7, 5, 7, 11, 6, 11, 9, 12, 4],
+                [8, 10, 7, 7, 11, 6, 10, 9, 12, 5],
+                [7, 12, 4, 14, 6, 12, 6, 10, 13, 7]
+            ];
+
+            // Colors selection for every row
+            var rowColors = ['pink', 'white', 'cyan', 'brown', 'gray', 'red', 'green', 'blue', 'yellow', 'purple', 'orange'];
+
+            // D3.js is used to create NxN matrix and A-Frame for 3D bars
+            var barsContainer = d3.select('#barsContainer');
+
+            jsonData.forEach(function(row, rowIndex) {
+                var color = rowColors[rowIndex % rowColors.length]; // color selection for row
+
+                row.forEach(function(value, columnIndex) {
+                    var x = columnIndex - (row.length / 2); // bars centered
+                    var z = rowIndex - (jsonData.length / 2); // bars centered
+
+                    var bar = document.createElement('a-box');
+                    bar.setAttribute('position', x + ' ' + (value / 2) + ' ' + z);
+                    bar.setAttribute('width', '0.8');
+                    bar.setAttribute('height', value);
+                    bar.setAttribute('depth', '0.8');
+                    bar.setAttribute('color', color); // color selection for bar
+
+                    barsContainer.node().appendChild(bar);
+                });
+            });
+        </script>
+    </a-scene>
+</body>
+</html>
